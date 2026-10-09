@@ -5,11 +5,20 @@ import 'poster_image.dart';
 
 /// Muted, looping preview. The video controller is only created while [active]
 /// is true and disposed as soon as it is not, so lists stay light on memory/data.
+/// If [controller] is provided, it will be used instead of creating a new one.
 class PreviewVideo extends StatefulWidget {
-  const PreviewVideo({super.key, required this.url, required this.poster, required this.active, this.hue = 25});
+  const PreviewVideo({
+    super.key,
+    required this.url,
+    required this.poster,
+    required this.active,
+    this.hue = 25,
+    this.controller,
+  });
   final String url, poster;
   final bool active;
   final double hue;
+  final VideoPlayerController? controller;
 
   @override
   State<PreviewVideo> createState() => _PreviewVideoState();
@@ -18,6 +27,7 @@ class PreviewVideo extends StatefulWidget {
 class _PreviewVideoState extends State<PreviewVideo> {
   VideoPlayerController? _ctl;
   bool _ready = false;
+  bool _ownsController = false;
 
   @override
   void initState() {
@@ -28,13 +38,32 @@ class _PreviewVideoState extends State<PreviewVideo> {
   @override
   void didUpdateWidget(PreviewVideo old) {
     super.didUpdateWidget(old);
-    if (old.active != widget.active || old.url != widget.url) {
+    if (old.active != widget.active || old.url != widget.url || old.controller != widget.controller) {
       _stop();
       if (widget.active) _start();
     }
   }
 
   Future<void> _start() async {
+    // Use provided controller or create new one
+    if (widget.controller != null) {
+      _ctl = widget.controller;
+      _ownsController = false;
+      if (!_ctl!.value.isInitialized) {
+        try {
+          await _ctl!.initialize();
+        } catch (_) {
+          return;
+        }
+      }
+      await _ctl!.setVolume(0);
+      await _ctl!.setLooping(true);
+      await _ctl!.play();
+      if (mounted) setState(() => _ready = true);
+      return;
+    }
+
+    _ownsController = true;
     final ctl = VideoPlayerController.networkUrl(
       Uri.parse(widget.url),
       videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
@@ -54,9 +83,16 @@ class _PreviewVideoState extends State<PreviewVideo> {
 
   void _stop() {
     final ctl = _ctl;
-    _ctl = null;
-    _ready = false;
-    ctl?.dispose();
+    if (_ownsController) {
+      _ctl = null;
+      _ready = false;
+      ctl?.dispose();
+    } else {
+      // Don't dispose external controller, just pause
+      ctl?.pause();
+      _ctl = null;
+      _ready = false;
+    }
   }
 
   @override

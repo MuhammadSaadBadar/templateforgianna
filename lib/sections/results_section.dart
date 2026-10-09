@@ -6,8 +6,24 @@ import '../widgets/count_up.dart';
 import '../widgets/reveal.dart';
 import '../widgets/ui.dart';
 
-class ResultsSection extends StatelessWidget {
+class ResultsSection extends StatefulWidget {
   const ResultsSection({super.key});
+
+  @override
+  State<ResultsSection> createState() => _ResultsSectionState();
+}
+
+class _ResultsSectionState extends State<ResultsSection> with SingleTickerProviderStateMixin {
+  late final AnimationController _countController = AnimationController(
+    duration: const Duration(milliseconds: 1200),
+    vsync: this,
+  );
+
+  @override
+  void dispose() {
+    _countController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +51,12 @@ class ResultsSection extends StatelessWidget {
                               ? const [Color(0xFFE2BE98), Color(0xFFB07A52)]
                               : const [Color(0xFF9A6542), Color(0xFF5E3722)],
                         ).createShader(Rect.fromLTWH(0, 0, r.width, r.height)),
-                        child: CountUp(value: s.value, suffix: s.suffix, style: display(context, size, weight: FontWeight.w600, color: Colors.white)),
+                        child: CountUp(
+                          value: s.value,
+                          suffix: s.suffix,
+                          style: display(context, size, weight: FontWeight.w600, color: Colors.white),
+                          controller: _countController,
+                        ),
                       ),
                       const SizedBox(height: 6),
                       Text(s.label, textAlign: TextAlign.center, style: body(context, color: c.muted)),

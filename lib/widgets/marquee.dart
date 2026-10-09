@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 /// Endlessly scrolling horizontal strip. Every child is given [itemExtent] width
 /// (include the gap in it). Pass enough children to cover roughly one screen width.
@@ -25,6 +26,9 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     duration: widget.duration,
   );
   int _duplicateCount = 3;
+  bool _visible = false;
+  late final String _id = 'marquee-${_MarqueeState._counter++}';
+  static int _counter = 0;
 
   @override
   void initState() {
@@ -52,6 +56,18 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     }
   }
 
+  void _onVisibility(VisibilityInfo info) {
+    final wasVisible = _visible;
+    _visible = info.visibleFraction > 0.1;
+    if (_visible != wasVisible) {
+      if (_visible) {
+        if (!_c.isAnimating) _c.repeat();
+      } else {
+        _c.stop();
+      }
+    }
+  }
+
   @override
   void dispose() {
     _c.dispose();
@@ -62,7 +78,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     if (MediaQuery.disableAnimationsOf(context)) {
       _c.stop();
-    } else if (!_c.isAnimating) {
+    } else if (!_c.isAnimating && _visible) {
       _c.repeat();
     }
 
@@ -75,20 +91,24 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
             SizedBox(width: widget.itemExtent, child: child),
       ],
     );
-    return ExcludeSemantics(
-      child: ClipRect(
-        child: SizedBox(
-          height: widget.height,
-          child: AnimatedBuilder(
-            animation: _c,
-            child: row,
-            builder: (context, child) => OverflowBox(
-              alignment: Alignment.centerLeft,
-              minWidth: 0,
-              maxWidth: double.infinity,
-              child: Transform.translate(
-                offset: Offset(-_c.value * total, 0),
-                child: child,
+    return VisibilityDetector(
+      key: Key(_id),
+      onVisibilityChanged: _onVisibility,
+      child: ExcludeSemantics(
+        child: ClipRect(
+          child: SizedBox(
+            height: widget.height,
+            child: AnimatedBuilder(
+              animation: _c,
+              child: row,
+              builder: (context, child) => OverflowBox(
+                alignment: Alignment.centerLeft,
+                minWidth: 0,
+                maxWidth: double.infinity,
+                child: Transform.translate(
+                  offset: Offset(-_c.value * total, 0),
+                  child: child,
+                ),
               ),
             ),
           ),

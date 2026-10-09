@@ -60,6 +60,38 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/fonts/Inter-Regular.ttf
+    - assets/fonts/Inter-Medium.ttf
+    - assets/fonts/Inter-SemiBold.ttf
+    - assets/fonts/Inter-Bold.ttf
+    - assets/fonts/PlayfairDisplay-Regular.ttf
+    - assets/fonts/PlayfairDisplay-Medium.ttf
+    - assets/fonts/PlayfairDisplay-SemiBold.ttf
+    - assets/fonts/PlayfairDisplay-Bold.ttf
+    - assets/client1.png
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
+    - family: Playfair Display
+      fonts:
+        - asset: assets/fonts/PlayfairDisplay-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/PlayfairDisplay-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/PlayfairDisplay-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/PlayfairDisplay-Bold.ttf
+          weight: 700
 
   # To add assets to your application, add an assets section, like this:
   # assets:

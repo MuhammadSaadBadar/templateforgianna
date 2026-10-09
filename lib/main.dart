@@ -6,6 +6,6 @@ import "app.dart";
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   // Make scroll-reveal animations feel responsive.
-  VisibilityDetectorController.instance.updateInterval = const Duration(milliseconds: 100);
+  VisibilityDetectorController.instance.updateInterval = const Duration(milliseconds: 200);
   runApp(const PortfolioApp());
 }

@@ -16,6 +16,7 @@ import '../sections/services_section.dart';
 import '../sections/testimonials_section.dart';
 import '../sections/trust_section.dart';
 import '../sections/work_section.dart';
+import '../widgets/lazy_section.dart';
 import '../widgets/project_dialog.dart';
 import '../widgets/ui.dart';
 
@@ -42,16 +43,16 @@ class _HomePageState extends State<HomePage> {
         SingleChildScrollView(
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             HeroSection(onWatchReel: () => showProjectDialog(context, siteConfig.projects.first)),
-            const TrustSection(),
-            KeyedSubtree(key: _keys['work'], child: const WorkSection()),
-            const ResultsSection(),
-            KeyedSubtree(key: _keys['services'], child: const Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [PositioningSection(), ServicesSection()])),
-            KeyedSubtree(key: _keys['process'], child: const ProcessSection()),
-            const TestimonialsSection(),
-            if (siteConfig.showPackages) const PackagesSection(),
-            KeyedSubtree(key: _keys['faq'], child: const FaqSection()),
-            const FinalCtaSection(),
-            const FooterSection(),
+            LazySection(builder: (_) => const TrustSection()),
+            KeyedSubtree(key: _keys['work'], child: LazySection(builder: (_) => const WorkSection())),
+            LazySection(builder: (_) => const ResultsSection()),
+            KeyedSubtree(key: _keys['services'], child: LazySection(builder: (_) => const Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [PositioningSection(), ServicesSection()]))),
+            KeyedSubtree(key: _keys['process'], child: LazySection(builder: (_) => const ProcessSection())),
+            LazySection(builder: (_) => const TestimonialsSection()),
+            if (siteConfig.showPackages) LazySection(builder: (_) => const PackagesSection()),
+            KeyedSubtree(key: _keys['faq'], child: LazySection(builder: (_) => const FaqSection())),
+            LazySection(builder: (_) => const FinalCtaSection()),
+            LazySection(builder: (_) => const FooterSection()),
           ]),
         ),
         Positioned(

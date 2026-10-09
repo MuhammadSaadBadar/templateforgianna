@@ -19,7 +19,7 @@ flutter config --enable-web
 # Get dependencies
 flutter pub get
 
-# Build for web (release mode)
-flutter build web --release
+# Build for web (release mode) with WasmGC
+flutter build web --wasm --release
 
 echo "Build complete. Output in build/web"

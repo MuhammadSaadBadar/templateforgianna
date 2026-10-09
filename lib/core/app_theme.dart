@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:google_fonts/google_fonts.dart";
 
 /// Palette: dark espresso brown + white, with a white + brown light mode.
 /// Change colours here to re-skin the whole site.
@@ -107,9 +106,27 @@ class AppTheme {
       extensions: [c],
     );
     return base.copyWith(
-      textTheme: GoogleFonts.interTextTheme(
-        base.textTheme,
-      ).apply(bodyColor: c.ink, displayColor: c.ink),
+      textTheme: _buildTextTheme(base.textTheme),
+    );
+  }
+
+  static TextTheme _buildTextTheme(TextTheme base) {
+    return base.copyWith(
+      displayLarge: base.displayLarge?.copyWith(fontFamily: 'Inter'),
+      displayMedium: base.displayMedium?.copyWith(fontFamily: 'Inter'),
+      displaySmall: base.displaySmall?.copyWith(fontFamily: 'Inter'),
+      headlineLarge: base.headlineLarge?.copyWith(fontFamily: 'Inter'),
+      headlineMedium: base.headlineMedium?.copyWith(fontFamily: 'Inter'),
+      headlineSmall: base.headlineSmall?.copyWith(fontFamily: 'Inter'),
+      titleLarge: base.titleLarge?.copyWith(fontFamily: 'Inter'),
+      titleMedium: base.titleMedium?.copyWith(fontFamily: 'Inter'),
+      titleSmall: base.titleSmall?.copyWith(fontFamily: 'Inter'),
+      bodyLarge: base.bodyLarge?.copyWith(fontFamily: 'Inter'),
+      bodyMedium: base.bodyMedium?.copyWith(fontFamily: 'Inter'),
+      bodySmall: base.bodySmall?.copyWith(fontFamily: 'Inter'),
+      labelLarge: base.labelLarge?.copyWith(fontFamily: 'Inter'),
+      labelMedium: base.labelMedium?.copyWith(fontFamily: 'Inter'),
+      labelSmall: base.labelSmall?.copyWith(fontFamily: 'Inter'),
     );
   }
 
@@ -118,7 +135,7 @@ class AppTheme {
 }
 
 class ThemeController extends ChangeNotifier {
-  ThemeMode mode = ThemeMode.light; // dark brown is the default
+  ThemeMode mode = ThemeMode.light;
   void toggle() {
     mode = mode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
     notifyListeners();
@@ -129,62 +146,28 @@ final themeController = ThemeController();
 
 /// Responsive breakpoints used throughout the application
 class Breakpoints {
-  /// Extra small screens (smartphones)
   static const double xs = 480.0;
-
-  /// Small screens (larger phones, small tablets in portrait)
   static const double sm = 640.0;
-
-  /// Medium screens (tablets in landscape, small laptops)
   static const double md = 768.0;
-
-  /// Large screens (laptops, desktops)
   static const double lg = 1024.0;
-
-  /// Extra large screens (large desktop monitors)
   static const double xl = 1200.0;
 }
 
 extension BreakpointUtils on BuildContext {
-  /// Get current screen width
   double get width => MediaQuery.sizeOf(this).width;
   double get w => MediaQuery.sizeOf(this).width;
-
-  /// Get current screen height
   double get height => MediaQuery.sizeOf(this).height;
   double get h => MediaQuery.sizeOf(this).height;
-
-  /// Get AppColors
   AppColors get c => Theme.of(this).extension<AppColors>()!;
-
-  /// Check if the theme is dark
   bool get isDark => Theme.of(this).brightness == Brightness.dark;
-
-  /// Check if screen is extra small (< 480px)
   bool get isXs => width < Breakpoints.xs;
-
-  /// Check if screen is small (< 640px)
   bool get isSm => width < Breakpoints.sm;
-
-  /// Check if screen is medium (< 768px)
   bool get isMd => width < Breakpoints.md;
-
-  /// Check if screen is large (< 1024px)
   bool get isLg => width < Breakpoints.lg;
-
-  /// Check if screen is extra large (>= 1200px)
   bool get isXl => width >= Breakpoints.xl;
-
-  /// Check if screen is mobile (use same threshold as isSm for consistency)
   bool get isMobile => isSm;
-
-  /// Check if screen is desktop (use same threshold as isLg for consistency)
   bool get isDesktop => isLg;
-
-  /// Check if screen is tablet (between sm and md)
   bool get isTablet => isMd && !isSm;
-
-  /// Get device category for use in responsive grids and layouts
   String get deviceCategory {
     if (isXl) return 'xl';
     if (isLg) return 'lg';
@@ -203,7 +186,8 @@ TextStyle display(
   bool italic = false,
   double height = 1.08,
 }) {
-  return GoogleFonts.inter(
+  return TextStyle(
+    fontFamily: 'Inter',
     fontSize: size,
     fontWeight: weight,
     fontStyle: italic ? FontStyle.italic : FontStyle.normal,
@@ -222,7 +206,8 @@ TextStyle displaySerif(
   bool italic = false,
   double height = 1.08,
 }) {
-  return GoogleFonts.playfairDisplay(
+  return TextStyle(
+    fontFamily: 'Playfair Display',
     fontSize: size,
     fontWeight: weight,
     fontStyle: italic ? FontStyle.italic : FontStyle.normal,
@@ -239,7 +224,8 @@ TextStyle body(
   FontWeight weight = FontWeight.w400,
   double height = 1.6,
 }) {
-  return GoogleFonts.inter(
+  return TextStyle(
+    fontFamily: 'Inter',
     fontSize: size,
     fontWeight: weight,
     height: height,
