@@ -141,8 +141,8 @@ class SiteConfig {
 // ---------------------------------------------------------------------------
 const siteConfig = SiteConfig(
   editor: Editor(
-    name: 'Kai Morgan',
-    initials: 'KM',
+    name: 'Gianna Piers',
+    initials: 'GP',
     headlineTop: 'Turning raw footage into',
     headlineAccent: 'videos people finish.',
     subheadline:
