@@ -1,11 +1,11 @@
 {
-    "name": "client1",
-    "short_name": "client1",
+    "name": "Template Site",
+    "short_name": "Template Site",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Gianna Piers | Video Editor Portfolio",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
