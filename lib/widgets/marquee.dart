@@ -33,15 +33,12 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _updateDuplicateCount();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => _updateDuplicateCount(),
-    );
+    _updateDuplicateCount();
   }
 
   void _updateDuplicateCount() {

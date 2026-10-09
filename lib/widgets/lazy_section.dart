@@ -34,7 +34,7 @@ class _LazySectionState extends State<LazySection> {
       onVisibilityChanged: _onVisibility,
       child: _mounted
           ? widget.builder(context)
-          : (widget.placeholder ?? const SizedBox.shrink()),
+          : (widget.placeholder ?? const SizedBox(height: 1)),
     );
   }
 }
