@@ -19,8 +19,7 @@ class HeroSection extends StatelessWidget {
     final e = siteConfig.editor;
     
     // More sophisticated font sizing based on both width and height
-    final size = (context.width * 0.06).clamp(32.0, 76.0); // lessened font size
-    final imageSize = (context.width * 0.20).clamp(160.0, 300.0); // increased image size
+    final size = (context.width * 0.08).clamp(42.0, 96.0); // enlarged font size
     final accent = dark
         ? const [Color(0xFFFBF7F3), Color(0xFFE2BE98), Color(0xFFBE895D)]
         : const [Color(0xFF9A6542), Color(0xFF5E3722)];
@@ -60,85 +59,16 @@ class HeroSection extends StatelessWidget {
             constraints: BoxConstraints(maxWidth: context.isXs ? 320 : 940),
             child: Reveal(
               child: Column(children: [
-                context.isMobile 
-                  ? Column(
-                      children: [
-                        ClipOval(
-                          child: Image.asset(
-                            'assets/client1.png',
-                            width: imageSize,
-                            height: imageSize,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => Container(
-                              width: imageSize,
-                              height: imageSize,
-                              color: c.line,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 42),
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            children: [
-                              TextSpan(text: 'Turning raw footage ', style: display(context, size, weight: FontWeight.w700)),
-                              TextSpan(text: 'into\n', style: displaySerif(context, size, italic: true)),
-                            ],
-                          ),
-                        ),
-                        Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          alignment: WrapAlignment.center,
-                          children: [
-                            Text('videos ', style: displaySerif(context, size)),
-                            GradientText('people finish.', colors: accent, style: display(context, size, weight: FontWeight.w700)),
-                          ],
-                        ),
-                      ],
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ClipOval(
-                          child: Image.asset(
-                            'assets/client1.png',
-                            width: imageSize,
-                            height: imageSize,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => Container(
-                              width: imageSize,
-                              height: imageSize,
-                              color: c.line,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 56),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              RichText(
-                                textAlign: TextAlign.left,
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(text: 'Turning raw footage ', style: display(context, size, weight: FontWeight.w700)),
-                                    TextSpan(text: 'into', style: displaySerif(context, size, italic: true)),
-                                  ],
-                                ),
-                              ),
-                              Wrap(
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                children: [
-                                  Text('videos ', style: displaySerif(context, size)),
-                                  GradientText('people finish.', colors: accent, style: display(context, size, weight: FontWeight.w700)),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text('Turning raw footage ', style: display(context, size, weight: FontWeight.w700).copyWith(fontFamily: 'Roboto')),
+                    Text('into ', style: displaySerif(context, size, italic: true).copyWith(fontFamily: 'Times New Roman')),
+                    Text('videos ', style: displaySerif(context, size).copyWith(fontFamily: 'Times New Roman')),
+                    GradientText('people finish.', colors: accent, style: display(context, size, weight: FontWeight.w700).copyWith(fontFamily: 'Roboto')),
+                  ],
+                ),
                 const SizedBox(height: 26),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: context.isXs ? 280 : 620),
