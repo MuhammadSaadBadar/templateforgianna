@@ -59,15 +59,20 @@ class HeroSection extends StatelessWidget {
             constraints: BoxConstraints(maxWidth: context.isXs ? 320 : 940),
             child: Reveal(
               child: Column(children: [
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    Text('Turning raw footage ', style: display(context, size, weight: FontWeight.w700).copyWith(fontFamily: 'Roboto')),
-                    Text('into ', style: displaySerif(context, size, italic: true).copyWith(fontFamily: 'Times New Roman')),
-                    Text('videos ', style: displaySerif(context, size).copyWith(fontFamily: 'Times New Roman')),
-                    GradientText('people finish.', colors: accent, style: display(context, size, weight: FontWeight.w700).copyWith(fontFamily: 'Roboto')),
-                  ],
+                Text.rich(
+                  textAlign: TextAlign.center,
+                  TextSpan(
+                    children: [
+                      TextSpan(text: 'Turning raw footage ', style: display(context, size, weight: FontWeight.w700).copyWith(fontFamily: 'Roboto')),
+                      TextSpan(text: 'into ', style: displaySerif(context, size, italic: true).copyWith(fontFamily: 'Times New Roman')),
+                      TextSpan(text: 'videos ', style: displaySerif(context, size).copyWith(fontFamily: 'Times New Roman')),
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.baseline,
+                        baseline: TextBaseline.alphabetic,
+                        child: GradientText('people finish.', colors: accent, style: display(context, size, weight: FontWeight.w700).copyWith(fontFamily: 'Roboto')),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 26),
                 ConstrainedBox(
