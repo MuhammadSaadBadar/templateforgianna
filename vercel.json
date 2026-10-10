@@ -36,13 +36,13 @@
       ]
     },
     {
-      "source": "/main.dart.*",
+      "source": "/main.dart.js",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
-      "source": "/flutter*.js",
+      "source": "/flutter(.*).js",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
