@@ -140,11 +140,12 @@ class HeroSection extends StatelessWidget {
                             label: siteConfig.cta.label,
                             onPressed: () => openLink(siteConfig.cta.url),
                           ),
-                          AppButton(
-                            label: siteConfig.cta.secondaryLabel,
-                            primary: false,
-                            onPressed: onWatchReel,
-                          ),
+                          if (!context.isMobile)
+                            AppButton(
+                              label: siteConfig.cta.secondaryLabel,
+                              primary: false,
+                              onPressed: onWatchReel,
+                            ),
                         ],
                       ),
                       const SizedBox(height: 38),
