@@ -51,7 +51,8 @@ class NavBar extends StatelessWidget {
                   onPressed: themeController.toggle,
                   icon: Icon(context.isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined, color: c.ink),
                 ),
-                AppButton(label: siteConfig.cta.label, compact: true, onPressed: () => openLink(siteConfig.cta.url)),
+                if (!context.isMobile)
+                  AppButton(label: siteConfig.cta.label, compact: true, onPressed: () => openLink(siteConfig.cta.url)),
               ]),
             ),
           ),

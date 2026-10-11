@@ -20,7 +20,7 @@ class HeroSection extends StatelessWidget {
 
     // More sophisticated font sizing based on both width and height
     final size = context.isMobile
-        ? (context.width * 0.135).clamp(48.0, 64.0) // mobile: bigger headline
+        ? (context.width * 0.155).clamp(56.0, 72.0) // mobile: bigger headline
         : (context.width * 0.075).clamp(44.0, 96.0); // desktop
     final accent = dark
         ? const [Color(0xFFFBF7F3), Color(0xFFE2BE98), Color(0xFFBE895D)]
@@ -62,7 +62,7 @@ class HeroSection extends StatelessWidget {
             // Responsive top spacing - use more height-aware calculation for mobile centering
             SizedBox(
               height: context.isMobile
-                  ? (context.height * 0.18).clamp(90.0, 140.0)  // increased for more nav bar gap
+                  ? (context.height * 0.22).clamp(110.0, 160.0)  // increased for more nav bar gap and no CTA
                   : (context.isXs ? 100.0 : (context.isSm ? 120.0 : 130.0)),
             ),
             Padding(
@@ -125,7 +125,7 @@ class HeroSection extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: body(
                             context,
-                            size: context.isMobile ? 12 : 19,
+                            size: context.isMobile ? 11 : 19,
                             color: c.muted,
                           ),
                         ),
@@ -136,10 +136,11 @@ class HeroSection extends StatelessWidget {
                         runSpacing: 12,
                         alignment: WrapAlignment.center,
                         children: [
-                          AppButton(
-                            label: siteConfig.cta.label,
-                            onPressed: () => openLink(siteConfig.cta.url),
-                          ),
+                          if (!context.isMobile)
+                            AppButton(
+                              label: siteConfig.cta.label,
+                              onPressed: () => openLink(siteConfig.cta.url),
+                            ),
                           if (!context.isMobile)
                             AppButton(
                               label: siteConfig.cta.secondaryLabel,
