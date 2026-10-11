@@ -20,7 +20,7 @@ class HeroSection extends StatelessWidget {
 
     // More sophisticated font sizing based on both width and height
     final size = context.isMobile
-        ? (context.width * 0.115).clamp(38.0, 56.0) // mobile: bigger headline
+        ? (context.width * 0.135).clamp(48.0, 64.0) // mobile: bigger headline
         : (context.width * 0.075).clamp(44.0, 96.0); // desktop
     final accent = dark
         ? const [Color(0xFFFBF7F3), Color(0xFFE2BE98), Color(0xFFBE895D)]
@@ -59,7 +59,12 @@ class HeroSection extends StatelessWidget {
         ),
         Column(
           children: [
-            SizedBox(height: context.isXs ? 100 : (context.isSm ? 120 : 130)),
+            // Responsive top spacing - use more height-aware calculation for mobile centering
+            SizedBox(
+              height: context.isMobile
+                  ? (context.height * 0.18).clamp(90.0, 140.0)  // increased for more nav bar gap
+                  : (context.isXs ? 100.0 : (context.isSm ? 120.0 : 130.0)),
+            ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: context.isXs ? 16 : 20),
               child: ConstrainedBox(
@@ -120,7 +125,7 @@ class HeroSection extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: body(
                             context,
-                            size: context.isMobile ? 14 : 19,
+                            size: context.isMobile ? 12 : 19,
                             color: c.muted,
                           ),
                         ),

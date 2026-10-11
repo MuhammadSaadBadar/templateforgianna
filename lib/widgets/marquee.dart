@@ -11,10 +11,12 @@ class Marquee extends StatefulWidget {
     required this.itemExtent,
     required this.height,
     this.duration = const Duration(seconds: 60),
+    this.reverse = false,
   });
   final List<Widget> children;
   final double itemExtent, height;
   final Duration duration;
+  final bool reverse;
 
   @override
   State<Marquee> createState() => _MarqueeState();
@@ -103,7 +105,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
                 minWidth: 0,
                 maxWidth: double.infinity,
                 child: Transform.translate(
-                  offset: Offset(-_c.value * total, 0),
+                  offset: Offset(widget.reverse ? _c.value * total : -_c.value * total, 0),
                   child: child,
                 ),
               ),
