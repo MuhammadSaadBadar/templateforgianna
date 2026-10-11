@@ -2,8 +2,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-/// Endlessly scrolling horizontal strip. Every child is given [itemExtent] width
-/// (include the gap in it). Pass enough children to cover roughly one screen width.
+/// Endlessly scrolling horizontal strip with manual scroll support.
+/// Every child is given [itemExtent] width (include the gap in it).
+/// Pass enough children to cover roughly one screen width.
 class Marquee extends StatefulWidget {
   const Marquee({
     super.key,
@@ -27,14 +28,17 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     vsync: this,
     duration: widget.duration,
   );
+  late final ScrollController _scrollController = ScrollController();
   int _duplicateCount = 3;
   bool _visible = false;
+  bool _userInteracting = false;
   late final String _id = 'marquee-${_MarqueeState._counter++}';
   static int _counter = 0;
 
   @override
   void initState() {
     super.initState();
+    _c.addListener(_onAnimationTick);
   }
 
   @override
@@ -59,7 +63,7 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     final wasVisible = _visible;
     _visible = info.visibleFraction > 0.1;
     if (_visible != wasVisible) {
-      if (_visible) {
+      if (_visible && !_userInteracting) {
         if (!_c.isAnimating) _c.repeat();
       } else {
         _c.stop();
@@ -67,9 +71,52 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
     }
   }
 
+  void _onAnimationTick() {
+    if (!_userInteracting && _scrollController.hasClients) {
+      final total = widget.children.length * widget.itemExtent;
+      final maxScroll = total * _duplicateCount;
+      double currentOffset = _scrollController.offset;
+      final pixelsPerTick = total / (widget.duration.inMilliseconds / 16.67);
+
+      if (widget.reverse) {
+        currentOffset += pixelsPerTick;
+        if (currentOffset >= maxScroll) {
+          currentOffset -= total;
+        }
+      } else {
+        currentOffset -= pixelsPerTick;
+        if (currentOffset <= 0) {
+          currentOffset += total;
+        }
+      }
+      _scrollController.jumpTo(currentOffset.clamp(0.0, maxScroll));
+    }
+  }
+
+  void _onPointerDown(PointerDownEvent _) {
+    setState(() => _userInteracting = true);
+    _c.stop();
+  }
+
+  void _onPointerUp(PointerUpEvent _) {
+    setState(() => _userInteracting = false);
+    if (_visible && !MediaQuery.disableAnimationsOf(context)) {
+      _c.repeat();
+    }
+  }
+
+  void _onPointerCancel(PointerCancelEvent _) {
+    setState(() => _userInteracting = false);
+    if (_visible && !MediaQuery.disableAnimationsOf(context)) {
+      _c.repeat();
+    }
+  }
+
   @override
   void dispose() {
+    _c.removeListener(_onAnimationTick);
     _c.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -77,19 +124,13 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     if (MediaQuery.disableAnimationsOf(context)) {
       _c.stop();
-    } else if (!_c.isAnimating && _visible) {
+    } else if (!_c.isAnimating && _visible && !_userInteracting) {
       _c.repeat();
     }
 
     final total = widget.children.length * widget.itemExtent;
-    final row = Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        for (var copy = 0; copy < _duplicateCount; copy++)
-          for (final child in widget.children)
-            SizedBox(width: widget.itemExtent, child: child),
-      ],
-    );
+    final itemWidth = widget.itemExtent;
+
     return VisibilityDetector(
       key: Key(_id),
       onVisibilityChanged: _onVisibility,
@@ -97,16 +138,35 @@ class _MarqueeState extends State<Marquee> with SingleTickerProviderStateMixin {
         child: ClipRect(
           child: SizedBox(
             height: widget.height,
-            child: AnimatedBuilder(
-              animation: _c,
-              child: row,
-              builder: (context, child) => OverflowBox(
-                alignment: Alignment.centerLeft,
-                minWidth: 0,
-                maxWidth: double.infinity,
-                child: Transform.translate(
-                  offset: Offset(widget.reverse ? _c.value * total : -_c.value * total, 0),
-                  child: child,
+            child: Listener(
+              onPointerDown: _onPointerDown,
+              onPointerUp: _onPointerUp,
+              onPointerCancel: _onPointerCancel,
+              behavior: HitTestBehavior.translucent,
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (notification) {
+                  if (notification is ScrollUpdateNotification) {
+                    final maxScroll = total * _duplicateCount;
+                    if (_scrollController.offset >= maxScroll - total) {
+                      _scrollController.jumpTo(_scrollController.offset - total);
+                    } else if (_scrollController.offset <= 0) {
+                      _scrollController.jumpTo(_scrollController.offset + total);
+                    }
+                  }
+                  return false;
+                },
+                child: ListView.builder(
+                  controller: _scrollController,
+                  scrollDirection: Axis.horizontal,
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: widget.children.length * _duplicateCount,
+                  itemBuilder: (context, index) {
+                    final childIndex = index % widget.children.length;
+                    return SizedBox(
+                      width: itemWidth,
+                      child: widget.children[childIndex],
+                    );
+                  },
                 ),
               ),
             ),
